@@ -1,42 +1,41 @@
-// 在子应用入口文件顶部添加
-// 在Vite子应用中，需动态设置publicPath
-if (window.__POWERED_BY_QIANKUN__) {
-  // @ts-ignore
-  __vite_base__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__
-}
-
-
+import './public-path';
 import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
 import './style.css'
 import App from './App.vue'
-import router from './router'
+import routes from './router'
+import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
 
 let instance = null
+let router = null
 
 function render(props = {}) {
   const { container } = props
+  // 创建路由
+  router = createRouter({
+    history: createWebHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/vite-sub-app/' : '/'),
+    routes
+  })
+
+  // 创建 Vue 应用
   instance = createApp(App)
   instance.use(router)
+
+  // 挂载到指定容器或默认 #app
   instance.mount(container ? container.querySelector('#app') : '#app')
 }
 
-// 独立运行时
-if (!window.__POWERED_BY_QIANKUN__) {
-  render()
+const initQianKun = () => {
+  renderWithQiankun({
+    mount(props) {
+      const { container } = props
+      render(props)
+    },
+    bootstrap() { },
+    unmount() {
+      ReactDOM.unmountComponentAtNode(props.container?.querySelector('#app') || document.querySelector('#app'));
+    }
+  })
 }
 
-// Qiankun生命周期钩子
-export async function bootstrap() {
-  console.log('[vite-sub-app] bootstrap')
-}
-
-export async function mount(props) {
-  console.log('[vite-sub-app] mount', props)
-  render(props)
-}
-
-export async function unmount() {
-  console.log('[vite-sub-app] unmount')
-  instance?.unmount()
-  instance = null
-}
+qiankunWindow.__POWERED_BY_QIANKUN__ ? initQianKun() : render()

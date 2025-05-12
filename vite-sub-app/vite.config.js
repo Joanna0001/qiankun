@@ -1,9 +1,17 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import qiankun from 'vite-plugin-qiankun';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    qiankun('vite-sub-app', {
+      useDevMode: true
+    }), // 子应用名称，需与主应用注册的名称一致
+  ],
+  // base: 'http://your-domain.com/', // 生产环境需指定运行域名
+  // base: '/vite-sub-app/', // 必须与主应用的 activeRule 匹配
   server: {
     port: 5001, // 与主应用entry一致
     cors: true, // 允许跨域
@@ -28,4 +36,8 @@ export default defineConfig({
       },
     },
   },
+  // 强制预构建依赖
+  optimizeDeps: {
+    include: ['vue']
+  }
 })

@@ -1,7 +1,15 @@
 <template>
   <div id="app">
     <h1>主应用</h1>
-    <!-- 子应用挂载点 -->
-    <div id="subapp-container"></div>
+    <!-- <router-link to="/vite-sub-app">加载子应用</router-link> -->
+    <MicroAppContainer />
   </div>
 </template>
+
+<script>
+import MicroAppContainer from './layouts/MicroAppContainer.vue'
+
+export default {
+  components: { MicroAppContainer }
+}
+</script>
