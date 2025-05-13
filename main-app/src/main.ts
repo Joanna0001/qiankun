@@ -10,16 +10,15 @@ registerMicroApps([
     entry: '//localhost:5001', // 子应用Vite服务地址 明确指定入口文件
     container: '#subapp-container', // 挂载节点
     activeRule: '/vite-sub-app', // 路由匹配规则
+    sandbox: {
+      // 启用样式隔离（可选）
+      experimentalStyleIsolation: true,
+    },
   },
 ]);
 
 // 启动 qiankun
-start({
-  sandbox: {
-    // 启用样式隔离（可选）
-    experimentalStyleIsolation: true,
-  },
-});
+start();
 
 const app = createApp(App)
 app.use(router)
