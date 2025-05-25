@@ -9,11 +9,11 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/vite-sub-app*', // 匹配子应用路由
-    component: () => import('@/layouts/MicroAppContainer.vue'), // 空容器组件
+    component: () => import('@/views/Home.vue'),
   },
   // 404 页面
   // {
-  //   path: '/:pathMatch(.*)*',
+  //   path: '/:pathMatch(.*)*',   
   //   redirect: '/404'
   // }
 ]
