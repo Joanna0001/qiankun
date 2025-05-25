@@ -7,18 +7,18 @@ import router from "@/router" // 导入路由配置
 registerMicroApps([
   {
     name: 'vite-sub-app', // 子应用名称
-    entry: '//localhost:5001', // 子应用Vite服务地址 明确指定入口文件
+    entry: import.meta.env.VITE_SUB_APP_URL, // 子应用Vite服务地址 明确指定入口文件
     container: '#subapp-container', // 挂载节点
     activeRule: '/vite-sub-app', // 路由匹配规则
-    sandbox: {
-      // 启用样式隔离（可选）
-      experimentalStyleIsolation: true,
-    },
   },
 ]);
 
 // 启动 qiankun
-start();
+start({
+  sandbox: {
+    experimentalStyleIsolation: true,
+  }
+});
 
 const app = createApp(App)
 app.use(router)

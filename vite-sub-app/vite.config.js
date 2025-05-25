@@ -18,6 +18,7 @@ export default defineConfig({
     headers: {
       'Access-Control-Allow-Origin': '*', // 主应用访问权限
     },
+    
   },
   build: {
     // 打包成UMD格式，供Qiankun加载
