@@ -1,7 +1,24 @@
 <template>
-  <div>
+  <div class="image-processor">
     <a-card title="图片处理工具" :bordered="false">
       <a-card title="调整参数" :bordered="false" style="margin-bottom: 20px;">
+        <template #extra>
+          <a-dropdown :trigger="['click']">
+            <a-button type="primary">
+              选择预设尺寸
+              <DownOutlined />
+            </a-button>
+            <template #overlay>
+              <a-menu @click="handlePresetSelect">
+                <a-menu-item key="iphone14promax">iPhone 6.7 英寸 (1290 x 2796)</a-menu-item>
+                <a-menu-item key="iphone14plus">iPhone 6.7 英寸 (1284 x 2778)</a-menu-item>
+                <a-menu-item key="iphone8plus">iPhone 5.5 英寸 (1242 x 2208)</a-menu-item>
+                <a-menu-item key="ipadpro129">iPad Pro 12.9 英寸 (2048 x 2732)</a-menu-item>
+                <a-menu-item key="ipadpro11">iPad Pro 11 英寸 (1668 x 2388)</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </template>
         <a-form layout="vertical">
           <a-row :gutter="16">
             <a-col :span="12">
@@ -32,6 +49,9 @@
 
       <div v-if="imageUrls.length > 0" style="margin-top: 20px;">
         <a-card title="原图预览" :bordered="false">
+          <template #extra>
+            <a-checkbox v-model:checked="selectAll" @change="handleSelectAll">全选</a-checkbox>
+          </template>
           <a-row :gutter="16">
             <a-col :span="8" v-for="(url, index) in imageUrls" :key="index" style="margin-bottom: 16px;">
               <div style="position: relative;">
@@ -51,6 +71,9 @@
 
       <div v-if="processedImageUrls.length > 0" style="margin-top: 20px;">
         <a-card title="处理后图片预览" :bordered="false">
+          <template #extra>
+            <a-checkbox v-model:checked="selectAllProcessed" @change="handleSelectAllProcessed">全选</a-checkbox>
+          </template>
           <a-row :gutter="16">
             <a-col :span="8" v-for="(url, index) in processedImageUrls" :key="index" style="margin-bottom: 16px;">
               <div style="position: relative;">
@@ -75,9 +98,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { message } from 'ant-design-vue';
-import { DeleteOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, DownOutlined } from '@ant-design/icons-vue';
 
 const imageUrls = ref([]);
 const processedImageUrls = ref([]);
@@ -88,6 +111,16 @@ const previewVisible = ref(false);
 const previewImage = ref('');
 const selectedImages = ref([]);
 const selectedProcessedImages = ref([]);
+const selectAll = ref(false);
+const selectAllProcessed = ref(false);
+
+const presetSizes = {
+  iphone14promax: { width: 1290, height: 2796 },
+  iphone14plus: { width: 1284, height: 2778 },
+  iphone8plus: { width: 1242, height: 2208 },
+  ipadpro129: { width: 2048, height: 2732 },
+  ipadpro11: { width: 1668, height: 2388 }
+};
 
 function handleFileUpload(file) {
   const isImage = file.type.startsWith('image/');
@@ -193,8 +226,51 @@ function showPreview(url) {
 function handlePreviewCancel() {
   previewVisible.value = false;
 }
+
+// 监听选中状态变化，更新全选状态
+watch(selectedImages, (newVal) => {
+  selectAll.value = newVal.length > 0 && newVal.every(item => item);
+}, { deep: true });
+
+watch(selectedProcessedImages, (newVal) => {
+  selectAllProcessed.value = newVal.length > 0 && newVal.every(item => item);
+}, { deep: true });
+
+// 处理原图全选/取消全选
+function handleSelectAll(e) {
+  selectedImages.value = selectedImages.value.map(() => e.target.checked);
+}
+
+// 处理处理后图片全选/取消全选
+function handleSelectAllProcessed(e) {
+  selectedProcessedImages.value = selectedProcessedImages.value.map(() => e.target.checked);
+}
+
+function handlePresetSelect({ key }) {
+  const size = presetSizes[key];
+  if (size) {
+    targetWidth.value = size.width;
+    targetHeight.value = size.height;
+    targetQuality.value = 1;
+    message.success(`已设置尺寸为 ${size.width} x ${size.height}，质量为 1`);
+  }
+}
 </script>
 
 <style scoped>
-/* Add your styles here */
+.image-processor :deep(.ant-card) {
+  margin-bottom: 12px;
+}
+
+.image-processor :deep(.ant-card-body) {
+  padding: 12px;
+}
+
+.image-processor :deep(.ant-form-item) {
+  margin-bottom: 12px;
+}
+
+.image-processor :deep(.ant-row) {
+  margin-bottom: 0;
+}
 </style> 
