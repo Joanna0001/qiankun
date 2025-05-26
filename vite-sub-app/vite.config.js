@@ -23,7 +23,8 @@ export default defineConfig({
       dirs: ['src/components'],
       dts: 'src/components.d.ts',
     }),
-    visualizer({
+    // 只在分析时启用 visualizer
+    process.env.ANALYZE === 'true' && visualizer({
       filename: 'dist/stats.html',
       open: true,
       gzipSize: true,
@@ -60,7 +61,7 @@ export default defineConfig({
         ]
       }
     })
-  ],
+  ].filter(Boolean), // 过滤掉 false 值
   css: {
     postcss: {
       plugins: [
@@ -97,30 +98,6 @@ export default defineConfig({
     }
   },
   build: {
-    // 打包成UMD格式，供Qiankun加载
-    lib: {
-      entry: 'src/main.js',
-      name: 'viteSubApp',
-      formats: ['umd'],
-      fileName: () => 'vite-sub-app.js',
-    },
-    rollupOptions: {
-      external: ['vue', 'vue-router', 'pinia', '@vueuse/core'], // 添加更多外部依赖
-      output: {
-        globals: {
-          vue: 'Vue',
-          'vue-router': 'VueRouter',
-          'pinia': 'Pinia',
-          '@vueuse/core': 'VueUse'
-        },
-        // 优化分包配置
-        manualChunks: {
-          'vendor': ['vue', 'vue-router', 'pinia', '@vueuse/core'],
-          'utils': ['axios', 'lodash-es'],
-          'ui': ['element-plus'] // 如果使用 UI 库
-        }
-      },
-    },
     // 添加构建优化配置
     target: 'esnext',
     minify: 'terser',
@@ -140,7 +117,32 @@ export default defineConfig({
     cssCodeSplit: true, // CSS 代码分割
     reportCompressedSize: false, // 禁用压缩大小报告
     // 优化 chunk 大小警告
-    chunkSizeWarningLimit: 2000
+    chunkSizeWarningLimit: 2000,
+    // 输出目录
+    outDir: 'dist',
+    // 静态资源目录
+    assetsDir: 'assets',
+    // 是否生成 sourcemap
+    sourcemap: false,
+    // 构建为库时的配置
+    lib: process.env.BUILD_LIB === 'true' ? {
+      entry: 'src/main.js',
+      name: 'viteSubApp',
+      formats: ['umd'],
+      fileName: () => 'vite-sub-app.js',
+    } : undefined,
+    // 构建为应用时的配置
+    rollupOptions: process.env.BUILD_LIB === 'true' ? {
+      external: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+      output: {
+        globals: {
+          vue: 'Vue',
+          'vue-router': 'VueRouter',
+          'pinia': 'Pinia',
+          '@vueuse/core': 'VueUse'
+        }
+      }
+    } : undefined
   },
   // 强制预构建依赖
   optimizeDeps: {
