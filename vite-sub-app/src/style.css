@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义样式 */
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-primary text-white rounded hover:bg-primary/90;
+  }
+}
+
+/* 微前端子应用特定样式 */
+#vite-sub-app {
+  @apply w-full h-full;
+}
+
+/* 基础样式重置 */
+:root {
+  @apply font-sans antialiased;
+  color-scheme: light dark;
+}
+
+/* 移除可能影响其他应用的样式 */
+body {
+  @apply m-0 min-h-screen;
+}
+
+#app {
+  @apply w-full max-w-7xl mx-auto p-5;
+  border: 2px dashed #42b983;
+}
+
+/* 响应式主题 */
+@media (prefers-color-scheme: light) {
+  :root {
+    @apply text-gray-900 bg-white;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @apply text-gray-100 bg-gray-900;
+  }
+}
