@@ -10,7 +10,7 @@ import autoprefixer from 'autoprefixer'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "./",
+  base: "/vite-sub-app/",
   plugins: [
     vue(),
     qiankun('vite-sub-app', {

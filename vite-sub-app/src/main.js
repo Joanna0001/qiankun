@@ -1,6 +1,6 @@
 import './public-path';
 import { createApp } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
@@ -18,7 +18,7 @@ function render(props = {}) {
 
   // 创建路由
   router = createRouter({
-    history: createWebHashHistory('/vite-sub-app/'),
+    history: createWebHistory('/vite-sub-app/'),
     routes
   })
   app.use(router)
