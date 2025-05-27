@@ -10,6 +10,7 @@ import autoprefixer from 'autoprefixer'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "./",
   plugins: [
     vue(),
     qiankun('vite-sub-app', {
@@ -71,9 +72,6 @@ export default defineConfig({
     },
   },
   // 根据环境设置 base
-  base: process.env.NODE_ENV === 'production' 
-    ? '/vite-sub-app/'  // 生产环境路径
-    : '/',              // 开发环境路径
   server: {
     port: 5001, // 与主应用entry一致
     cors: true, // 允许跨域
@@ -123,7 +121,7 @@ export default defineConfig({
     // 静态资源目录
     assetsDir: 'assets',
     // 是否生成 sourcemap
-    sourcemap: false,
+    sourcemap: true,
     // 构建为库时的配置
     lib: process.env.BUILD_LIB === 'true' ? {
       entry: 'src/main.js',
@@ -132,17 +130,15 @@ export default defineConfig({
       fileName: () => 'vite-sub-app.js',
     } : undefined,
     // 构建为应用时的配置
-    rollupOptions: process.env.BUILD_LIB === 'true' ? {
-      external: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+    // 确保资源路径正确
+    rollupOptions: {
       output: {
-        globals: {
-          vue: 'Vue',
-          'vue-router': 'VueRouter',
-          'pinia': 'Pinia',
-          '@vueuse/core': 'VueUse'
-        }
+        manualChunks: undefined,
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
-    } : undefined
+    }
   },
   // 强制预构建依赖
   optimizeDeps: {

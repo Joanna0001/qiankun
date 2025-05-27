@@ -1,13 +1,13 @@
 import './public-path';
 import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
 import './style.css'
 import App from './App.vue'
 import routes from './router'
-import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
 
 let instance = null
 let router = null
@@ -18,7 +18,7 @@ function render(props = {}) {
 
   // 创建路由
   router = createRouter({
-    history: createWebHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/vite-sub-app/' : '/'),
+    history: createWebHashHistory('/vite-sub-app/'),
     routes
   })
   app.use(router)
