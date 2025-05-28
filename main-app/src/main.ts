@@ -12,6 +12,12 @@ registerMicroApps([
     container: '#subapp-container', // 挂载节点
     activeRule: '/vite-sub-app', // 路由匹配规则
   },
+  {
+    name: 'rednote-react',
+    entry: '//localhost:5002',
+    container: '#rednote-container',
+    activeRule: '/rednote'
+  }
 ]);
 
 // 启动 qiankun

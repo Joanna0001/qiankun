@@ -3,6 +3,7 @@
     <!-- <a-card title="主应用" :bordered="false"> -->
       <p>这是主应用的内容</p>
       <div id="subapp-container"></div>
+      <div id="rednote-container"></div>
     <!-- </a-card> -->
   </div>
 </template>
