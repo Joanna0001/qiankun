@@ -10,6 +10,8 @@
             </a-button>
             <template #overlay>
               <a-menu @click="handlePresetSelect">
+                <a-menu-item key="iphone65">iPhone 6.5 英寸 (1242 x 2688)</a-menu-item>
+                <a-menu-item key="iphone69">iPhone 6.9 英寸 (1320 x 2868)</a-menu-item>
                 <a-menu-item key="iphone14promax">iPhone 6.7 英寸 (1290 x 2796)</a-menu-item>
                 <a-menu-item key="iphone14plus">iPhone 6.7 英寸 (1284 x 2778)</a-menu-item>
                 <a-menu-item key="iphone8plus">iPhone 5.5 英寸 (1242 x 2208)</a-menu-item>
@@ -115,6 +117,8 @@ const selectAll = ref(false);
 const selectAllProcessed = ref(false);
 
 const presetSizes = {
+  iphone65: { width: 1242, height: 2688 },
+  iphone69: { width: 1320, height: 2868 },
   iphone14promax: { width: 1290, height: 2796 },
   iphone14plus: { width: 1284, height: 2778 },
   iphone8plus: { width: 1242, height: 2208 },
